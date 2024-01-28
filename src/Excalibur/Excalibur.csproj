@@ -8,11 +8,11 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <Authors>(author)</Authors>
+    <Authors>robertcoltheart</Authors>
     <Description>A thing that does something</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/(author)/(repo)</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/(author)/(repo)</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/robertcoltheart/excalibur</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/robertcoltheart/excalibur</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags></PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
