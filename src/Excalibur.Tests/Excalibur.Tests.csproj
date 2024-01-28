@@ -16,8 +16,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Excalibur\Excalibur.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,25 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
-    <Authors>robertcoltheart</Authors>
-    <Description>A thing that does something</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/robertcoltheart/excalibur</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/robertcoltheart/excalibur</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags></PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
 </Project>
