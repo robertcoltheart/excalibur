@@ -1,14 +1,7 @@
-namespace Excalibur;
+﻿using DustInTheWind.ConsoleTools.Controls.InputControls;
 
-internal static class Program
-{
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
-    {
-        ApplicationConfiguration.Initialize();
-        Application.Run(new MainForm());
-    }
-}
+var value = new StringValue("Enter something");
+value.Read();
+
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
