@@ -1,7 +1,6 @@
-﻿using DustInTheWind.ConsoleTools.Controls.InputControls;
+﻿using Excalibur.Workflows;
 
-var value = new StringValue("Enter something");
-value.Read();
+var workflow = new PurchaseOrderWorkflow();
+await workflow.ProcessPurchaseOrder();
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Completed process workflow");
