@@ -1,6 +1,9 @@
-﻿using Excalibur.Workflows;
+﻿using Excalibur.Input;
+using Excalibur.Workflows;
 
-var workflow = new PurchaseOrderWorkflow();
-await workflow.ProcessPurchaseOrder();
+var reader = new ExcelReader();
+var workflow = new PurchaseOrderWorkflow(reader);
+
+await workflow.Process();
 
 Console.WriteLine("Completed process workflow");

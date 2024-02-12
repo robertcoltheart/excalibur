@@ -1,12 +1,13 @@
 ﻿using NPOI.XSSF.UserModel;
 
-namespace Excalibur.Excel;
+namespace Excalibur.Input;
 
-public class ExcelReader
+public class ExcelReader : IInputReader<LineItem>
 {
-    public IEnumerable<LineItem> ReadLineItems(string filename)
+    public IEnumerable<LineItem> ReadItems(string fileName)
     {
-        var workbook = new XSSFWorkbook(filename);
+        using var workbook = new XSSFWorkbook(fileName);
+
         var sheet = workbook.GetSheetAt(0);
 
         for (var i = 1; i <= sheet.LastRowNum; i++)

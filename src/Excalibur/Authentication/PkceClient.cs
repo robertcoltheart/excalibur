@@ -13,7 +13,7 @@ public class PkceClient : IDisposable
 
     private const string TokenUrl = "https://identity.xero.com/connect/token";
 
-    private const string Scopes = "offline_access openid profile email accounting.transactions accounting.settings";
+    private const string Scopes = "offline_access openid profile email accounting.transactions accounting.transactions.read accounting.settings";
 
     private const string RedirectUrl = "http://localhost:8888/callback";
 
@@ -21,7 +21,7 @@ public class PkceClient : IDisposable
 
     private readonly ExcaliburConfiguration configuration;
 
-    private readonly HttpListener listener = new() {Prefixes = {"http://localhost:8888"}};
+    private readonly HttpListener listener = new() {Prefixes = {"http://localhost:8888/"}};
 
     private readonly HttpClient client = new();
 
@@ -69,9 +69,18 @@ public class PkceClient : IDisposable
     private async Task<string> GetAuthorizationCode(string codeVerifier)
     {
         var link = GenerateLink(codeVerifier);
-        Process.Start(link);
+
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = link,
+            UseShellExecute = true,
+            CreateNoWindow = true,
+            WindowStyle = ProcessWindowStyle.Hidden
+        };
 
         listener.Start();
+
+        Process.Start(startInfo);
 
         var code = await GetResponse();
 
@@ -96,7 +105,7 @@ public class PkceClient : IDisposable
 
         var query = context.Request.Url.Query;
 
-        if (!ParseQuery(context.Request.Url.Query, out var code, out var state))
+        if (!ParseQuery(query, out var code, out var state))
         {
             throw new InvalidOperationException("Missing authorization code in response from Xero");
         }
@@ -145,7 +154,7 @@ public class PkceClient : IDisposable
 
     private void WriteCompletion(HttpListenerResponse response)
     {
-        var buffer = Encoding.UTF8.GetBytes("You can close this window now");
+        var buffer = Encoding.UTF8.GetBytes("Xero authentication complete, you can close this window now");
 
         response.ContentType = "text/html";
         response.ContentLength64 = buffer.Length;

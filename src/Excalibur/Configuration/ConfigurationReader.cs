@@ -13,7 +13,9 @@ public class ConfigurationReader
 
         if (File.Exists(filename))
         {
-            return JsonSerializer.Deserialize<ExcaliburConfiguration>(filename)!;
+            var contents = File.ReadAllText(filename);
+
+            return JsonSerializer.Deserialize<ExcaliburConfiguration>(contents)!;
         }
 
         return new ExcaliburConfiguration();
@@ -24,6 +26,10 @@ public class ConfigurationReader
         var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         var filename = Path.Combine(path, ConfigPath, "config.json");
 
-        JsonSerializer.Serialize(File.OpenWrite(filename), configuration);
+        Directory.CreateDirectory(Path.Combine(path, ConfigPath));
+
+        var json = JsonSerializer.Serialize(configuration);
+
+        File.WriteAllText(filename, json);
     }
 }

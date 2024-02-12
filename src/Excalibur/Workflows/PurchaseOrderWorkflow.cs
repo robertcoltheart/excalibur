@@ -1,42 +1,46 @@
 ﻿using DustInTheWind.ConsoleTools.Controls.Menus;
-using Excalibur.Excel;
+using Excalibur.Input;
+using Excalibur.Menus;
+using Excalibur.Xero;
 
 namespace Excalibur.Workflows;
 
-public class PurchaseOrderWorkflow : Workflow
+public class PurchaseOrderWorkflow : Workflow<LineItem, IAccounting>
 {
-    public async Task ProcessPurchaseOrder()
+    public PurchaseOrderWorkflow(IInputReader<LineItem> reader)
+        : base(reader)
     {
-        var config = await Authenticate();
-
-        var items = GetWorkbookItems().ToArray();
     }
 
-    private IEnumerable<LineItem> GetWorkbookItems()
+    protected override async Task Upload(IAccounting client, string tenant, LineItem[] items)
     {
-        var sheets = Directory.GetFiles(Environment.CurrentDirectory, "*.xls*");
+        var contact = await GetContact(client, tenant);
 
-        var excelMenu = new TextMenu
-        {
-            EraseAfterClose = true,
-            QuestionText = "Select input Excel file: "
-        };
+        var order = new PurchaseOrder();
 
-        for (var i = 0; i < sheets.Length; i++)
+        foreach (var item in items)
         {
-            excelMenu.AddItem(new TextMenuItem
+            var lineItem = new PurchaseOrderLineItem
             {
-                Id = (i + 1).ToString(),
-                Text = Path.GetFileName(sheets[i])
-            });
+                Description = item.Description
+            };
         }
 
-        excelMenu.Display();
+        await client.CreatePurchaseOrder(tenant, order);
+    }
 
-        Console.WriteLine($"Processing {excelMenu.SelectedItem.Text}");
+    private async Task<string> GetContact(IAccounting client, string tenant)
+    {
+        var contacts = await client.GetContacts(tenant);
 
-        var excel = new ExcelReader();
+        var activeContacts = contacts
+            .AllContacts
+            .Where(x => x.ContactStatus == ContactStatus.Active)
+            .OrderBy(x => x.Name)
+            .ToArray();
 
-        return excel.ReadLineItems(sheets[excelMenu.SelectedIndex!.Value]);
+        var menu = new SelectMenu<Contact>("Select purchase order contact", activeContacts, x => x.ContactId, x => x.Name);
+
+        return menu.GetSelected();
     }
 }

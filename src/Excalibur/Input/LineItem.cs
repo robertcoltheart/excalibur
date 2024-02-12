@@ -1,4 +1,4 @@
-﻿namespace Excalibur.Excel;
+﻿namespace Excalibur.Input;
 
 public class LineItem
 {
