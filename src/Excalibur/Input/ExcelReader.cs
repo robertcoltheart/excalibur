@@ -17,15 +17,15 @@ public class ExcelReader : IInputReader<LineItem>
             var item = new LineItem
             {
                 PurchaseOrderNumber = row.GetCell(0).ToString(),
-                Context = row.GetCell(1).ToString(),
-                Date = row.GetCell(2).ToString(),
-                DeliveryDate = row.GetCell(3).ToString(),
+                Contact = row.GetCell(1).ToString(),
+                Date = row.GetCell(2).DateCellValue,
+                DeliveryDate = row.GetCell(3).DateCellValue,
                 Reference = row.GetCell(4).ToString(),
                 Status = row.GetCell(5).ToString(),
                 AccountCode = row.GetCell(6).ToString(),
                 Description = row.GetCell(7).ToString(),
-                Quantity = row.GetCell(8).ToString(),
-                UnitAmount = row.GetCell(9).ToString(),
+                Quantity = Convert.ToDecimal(row.GetCell(8).NumericCellValue),
+                UnitAmount = Convert.ToDecimal(row.GetCell(9).NumericCellValue),
                 TaxType = row.GetCell(10).ToString()
             };
 

@@ -1,7 +1,6 @@
-﻿using DustInTheWind.ConsoleTools.Controls.Menus;
-using Excalibur.Input;
-using Excalibur.Menus;
+﻿using Excalibur.Input;
 using Excalibur.Xero;
+using Pastel;
 
 namespace Excalibur.Workflows;
 
@@ -14,33 +13,71 @@ public class PurchaseOrderWorkflow : Workflow<LineItem, IAccounting>
 
     protected override async Task Upload(IAccounting client, string tenant, LineItem[] items)
     {
-        var contact = await GetContact(client, tenant);
+        var contacts = await GetContacts(client, tenant).ToArrayAsync();
 
-        var order = new PurchaseOrder();
+        var purchaseGroups = items
+            .GroupBy(x => new {x.PurchaseOrderNumber, x.Contact, x.Date, x.DeliveryDate, x.Reference, x.Status});
 
-        foreach (var item in items)
+        foreach (var purchaseGroup in purchaseGroups)
         {
-            var lineItem = new PurchaseOrderLineItem
+            var contact = contacts.FirstOrDefault(x => x.Name == purchaseGroup.Key.Contact);
+
+            if (contact == null)
             {
-                Description = item.Description
+                Console.WriteLine($"ERROR: Contact not found: {purchaseGroup.Key.Contact}".Pastel(ConsoleColor.Red));
+
+                return;
+            }
+
+            var purchaseOrder = new PurchaseOrder
+            {
+                Contact = new Contact
+                {
+                    ContactId = contact!.ContactId
+                },
+                Date = purchaseGroup.Key.Date!.Value.ToString("yyyy-MM-dd"),
+                DeliveryDate = purchaseGroup.Key.DeliveryDate!.Value.ToString("yyyy-MM-dd"),
+                Reference = purchaseGroup.Key.Reference!,
+                Status = purchaseGroup.Key.Status!,
+                LineItems = purchaseGroup.Select(CreateLineItem).ToList()
             };
+
+            Console.WriteLine($"Creating purchase order: Contact:{contact.Name}, Date:{purchaseOrder.Date}, DeliveryDate:{purchaseOrder.DeliveryDate}, Ref:{purchaseOrder.Reference}, Status:{purchaseOrder.Status}".Pastel(ConsoleColor.Gray));
+
+            try
+            {
+                await client.CreatePurchaseOrder(tenant, purchaseOrder);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"ERROR: {e.Message}".Pastel(ConsoleColor.Red));
+
+                return;
+            }
         }
 
-        await client.CreatePurchaseOrder(tenant, order);
+        Console.WriteLine("Completed creating purchase orders".Pastel(ConsoleColor.Green));
     }
 
-    private async Task<string> GetContact(IAccounting client, string tenant)
+    private PurchaseOrderLineItem CreateLineItem(LineItem lineItem)
+    {
+        return new PurchaseOrderLineItem
+        {
+            AccountCode = lineItem.AccountCode,
+            Description = lineItem.Description,
+            Quantity = lineItem.Quantity,
+            UnitAmount = lineItem.UnitAmount,
+            TaxType = lineItem.TaxType
+        };
+    }
+
+    private async Task<IEnumerable<Contact>> GetContacts(IAccounting client, string tenant)
     {
         var contacts = await client.GetContacts(tenant);
 
-        var activeContacts = contacts
+        return contacts
             .AllContacts
             .Where(x => x.ContactStatus == ContactStatus.Active)
-            .OrderBy(x => x.Name)
-            .ToArray();
-
-        var menu = new SelectMenu<Contact>("Select purchase order contact", activeContacts, x => x.ContactId, x => x.Name);
-
-        return menu.GetSelected();
+            .OrderBy(x => x.Name);
     }
 }

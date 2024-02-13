@@ -1,4 +1,5 @@
 ﻿using DustInTheWind.ConsoleTools.Controls.Menus;
+using Pastel;
 
 namespace Excalibur.Menus;
 
@@ -24,7 +25,7 @@ public class SelectMenu<T>
     {
         var menu = new TextMenu
         {
-            QuestionText = $"{question}: "
+            QuestionText = $"{question}: ".Pastel(ConsoleColor.Yellow)
         };
 
         for (var i = 1; i <= items.Length; i++)

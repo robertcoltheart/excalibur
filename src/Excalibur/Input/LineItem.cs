@@ -4,11 +4,11 @@ public class LineItem
 {
     public string? PurchaseOrderNumber { get; set; }
 
-    public string? Context { get; set; }
+    public string? Contact { get; set; }
 
-    public string? Date { get; set; }
+    public DateTime? Date { get; set; }
 
-    public string? DeliveryDate { get; set; }
+    public DateTime? DeliveryDate { get; set; }
 
     public string? Reference { get; set; }
 
@@ -18,9 +18,9 @@ public class LineItem
 
     public string? Description { get; set; }
 
-    public string? Quantity { get; set; }
+    public decimal Quantity { get; set; }
 
-    public string? UnitAmount { get; set; }
+    public decimal UnitAmount { get; set; }
 
     public string? TaxType { get; set; }
 }

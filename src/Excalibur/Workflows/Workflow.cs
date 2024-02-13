@@ -1,9 +1,14 @@
-﻿using DustInTheWind.ConsoleTools.Controls.InputControls;
+﻿using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using DustInTheWind.ConsoleTools.Controls.InputControls;
 using Excalibur.Authentication;
 using Excalibur.Configuration;
 using Excalibur.Input;
 using Excalibur.Menus;
 using Excalibur.Xero;
+using Pastel;
 using Refit;
 
 namespace Excalibur.Workflows;
@@ -23,7 +28,7 @@ public abstract class Workflow<T, TRestful>
     {
         var items = GetItems().ToArray();
 
-        Console.WriteLine("Getting Xero tenants...");
+        Console.WriteLine("Getting Xero tenants...".Pastel(ConsoleColor.Gray));
 
         var token = await Authenticate();
         var tenant = await GetTenant(token);
@@ -76,7 +81,7 @@ public abstract class Workflow<T, TRestful>
 
         if (string.IsNullOrEmpty(config.ClientId))
         {
-            var clientIdReader = new StringValue("Enter Xero client id:");
+            var clientIdReader = new StringValue("Enter Xero client id:".Pastel(ConsoleColor.Yellow));
             config.ClientId = clientIdReader.Read();
         }
 
@@ -92,9 +97,14 @@ public abstract class Workflow<T, TRestful>
 
     private TRestful GetClient(string token)
     {
+        var serializer = SystemTextJsonContentSerializer.GetDefaultJsonSerializerOptions();
+        serializer.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+
         var settings = new RefitSettings
         {
-            AuthorizationHeaderValueGetter = (_, _) => Task.FromResult(token)
+            AuthorizationHeaderValueGetter = (_, _) => Task.FromResult(token),
+            ContentSerializer = new SystemTextJsonContentSerializer(serializer),
+            ExceptionFactory = HandleValidationException
         };
 
         return RestService.For<TRestful>("https://api.xero.com/api.xro/2.0", settings);
@@ -104,9 +114,34 @@ public abstract class Workflow<T, TRestful>
     {
         var settings = new RefitSettings
         {
-            AuthorizationHeaderValueGetter = (_, _) => Task.FromResult(token)
+            AuthorizationHeaderValueGetter = (_, _) => Task.FromResult(token),
         };
 
         return RestService.For<IConnections>("https://api.xero.com", settings);
+    }
+
+    private async Task<Exception?> HandleValidationException(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var error = await response.Content.ReadFromJsonAsync<Error>();
+
+        var messages = error!.Elements
+            .SelectMany(x => x.ValidationErrors)
+            .Select(x => x.Message)
+            .Distinct();
+
+        var builder = new StringBuilder()
+            .AppendLine("The following validation errors occurred:");
+
+        foreach (var message in messages)
+        {
+            builder.AppendLine(message);
+        }
+
+        return new InvalidOperationException(builder.ToString());
     }
 }
