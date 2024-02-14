@@ -21,7 +21,3 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Build
         run: ./build.sh
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          path: artifacts/*.nupkg

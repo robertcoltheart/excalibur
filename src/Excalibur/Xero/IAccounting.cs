@@ -13,4 +13,7 @@ public interface IAccounting
 
     [Get("/Contacts")]
     Task<Contacts> GetContacts([Header("xero-tenant-id")] string tenantId);
+
+    [Get("/TrackingCategories")]
+    Task<Tracking> GetTrackingCategories([Header("xero-tenant-id")] string tenantId);
 }

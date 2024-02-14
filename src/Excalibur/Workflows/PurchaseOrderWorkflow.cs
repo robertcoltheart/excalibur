@@ -35,10 +35,10 @@ public class PurchaseOrderWorkflow : Workflow<LineItem, IAccounting>
                 {
                     ContactId = contact!.ContactId
                 },
-                Date = purchaseGroup.Key.Date!.Value.ToString("yyyy-MM-dd"),
-                DeliveryDate = purchaseGroup.Key.DeliveryDate!.Value.ToString("yyyy-MM-dd"),
-                Reference = purchaseGroup.Key.Reference!,
-                Status = purchaseGroup.Key.Status!,
+                Date = purchaseGroup.Key.Date?.ToString("yyyy-MM-dd"),
+                DeliveryDate = purchaseGroup.Key.DeliveryDate?.ToString("yyyy-MM-dd"),
+                Reference = purchaseGroup.Key.Reference,
+                Status = purchaseGroup.Key.Status?.ToUpper(),
                 LineItems = purchaseGroup.Select(CreateLineItem).ToList()
             };
 
@@ -61,14 +61,28 @@ public class PurchaseOrderWorkflow : Workflow<LineItem, IAccounting>
 
     private PurchaseOrderLineItem CreateLineItem(LineItem lineItem)
     {
-        return new PurchaseOrderLineItem
+        var item = new PurchaseOrderLineItem
         {
             AccountCode = lineItem.AccountCode,
             Description = lineItem.Description,
             Quantity = lineItem.Quantity,
             UnitAmount = lineItem.UnitAmount,
-            TaxType = lineItem.TaxType
+            TaxType = lineItem.TaxType!.ToUpper()
         };
+
+        if (!string.IsNullOrEmpty(lineItem.TrackingCategoryOption))
+        {
+            item.Tracking = new PurchaseOrderLineItemTrackingCategory[]
+            {
+                new()
+                {
+                    Name = lineItem.TrackingCategoryName,
+                    Option = lineItem.TrackingCategoryOption
+                }
+            };
+        }
+
+        return item;
     }
 
     private async Task<IEnumerable<Contact>> GetContacts(IAccounting client, string tenant)

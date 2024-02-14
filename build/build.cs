@@ -40,14 +40,7 @@ Target("test", DependsOn("build"), () =>
 
 Target("package", DependsOn("build", "test"), () =>
 {
-    Run("dotnet", $"pack --configuration Release --no-restore --no-build --output artifacts --property Version={version.SemVer}");
-});
-
-Target("publish", DependsOn("package"), () =>
-{
-    var apiKey = Environment.GetEnvironmentVariable("NUGET_API_KEY");
-
-    Run("dotnet", $"nuget push {Path.Combine("artifacts", "*.nupkg")} --api-key {apiKey} --source https://api.nuget.org/v3/index.json");
+    Run("dotnet", $"publish --configuration Release --output artifacts --property Version={version.SemVer} -r win-x64 -f net8.0");
 });
 
 Target("default", DependsOn("package"));

@@ -1,23 +1,32 @@
 # Excalibur
 
-[![Docs](https://img.shields.io/badge/docs-wiki-blue.svg?style=for-the-badge)](https://github.com/robertcoltheart/excalibur/wiki) [![NuGet](https://img.shields.io/nuget/v/Excalibur?style=for-the-badge)](https://www.nuget.org/packages/Excalibur) [![Discussions](https://img.shields.io/badge/DISCUSS-ON%20GITHUB-yellow?style=for-the-badge)](https://github.com/robertcoltheart/excalibur/discussions) [![License](https://img.shields.io/github/license/robertcoltheart/excalibur?style=for-the-badge)](https://github.com/robertcoltheart/excalibur/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/robertcoltheart/excalibur?style=for-the-badge)](https://github.com/robertcoltheart/excalibur/blob/master/LICENSE)
 
-A thing that does something.
+A console application for creating purchase orders in Xero.
 
 ## Usage
-Install the package from NuGet with `dotnet add package Excalibur`.
+Download the application from the releases page and put the exe into a folder. Copy any Excel files into the same folder, and run the application.
 
-```csharp
-Example code
-```
+Excel files must being with a header with the following columns, with sample data shown.
 
-## Documentation
-See the [wiki](https://github.com/robertcoltheart/excalibur/wiki) for examples and help using Excalibur.
+| PurchaseOrderNumber | Contact | Date | DeliveryDate | Reference | Status | Line Items.AccountCode | Line Items.Description | Line Items.Quantity | Line Items.UnitAmount | Line Items.TaxType |
+| -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+| Used for grouping | Full name | yyyy-MM-dd | yyyy-MM-dd | Any | DRAFT | 300 | Description | 5.0 | 1.0 | INPUT |
+
+Multiple purchase orders can be created by entering unique values for:
+- PurchaseOrderNumber
+- Contact
+- Date
+- DeliveryDate
+- Reference
+- Status
+
+For example, to group line items for a single purchase order, keep the above columns identical for each line item.
+
+You can abort the running of the app at any time by pressing `Ctrl+C`.
 
 ## Get in touch
-Discuss with us on [Discussions](https://github.com/robertcoltheart/excalibur/discussions), or raise an [issue](https://github.com/robertcoltheart/excalibur/issues).
-
-[![Discussions](https://img.shields.io/badge/DISCUSS-ON%20GITHUB-yellow?style=for-the-badge)](https://github.com/robertcoltheart/excalibur/discussions)
+Raise an [issue](https://github.com/robertcoltheart/excalibur/issues).
 
 ## Contributing
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.

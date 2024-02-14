@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using DustInTheWind.ConsoleTools.Controls.InputControls;
 using Excalibur.Authentication;
@@ -28,6 +27,13 @@ public abstract class Workflow<T, TRestful>
     {
         var items = GetItems().ToArray();
 
+        if (!items.Any())
+        {
+            Console.WriteLine("No Excel files found in current folder");
+
+            return;
+        }
+
         Console.WriteLine("Getting Xero tenants...".Pastel(ConsoleColor.Gray));
 
         var token = await Authenticate();
@@ -47,6 +53,11 @@ public abstract class Workflow<T, TRestful>
     private IEnumerable<T> GetItems()
     {
         var sheets = Directory.GetFiles(Environment.CurrentDirectory, "*.xls*");
+
+        if (!sheets.Any())
+        {
+            return Enumerable.Empty<T>();
+        }
 
         var menu = new SelectMenu<string>("Select input Excel file", sheets, x => x, Path.GetFileName);
         var fileName = menu.GetSelected();

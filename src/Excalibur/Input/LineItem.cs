@@ -18,9 +18,13 @@ public class LineItem
 
     public string? Description { get; set; }
 
-    public decimal Quantity { get; set; }
+    public decimal? Quantity { get; set; }
 
-    public decimal UnitAmount { get; set; }
+    public decimal? UnitAmount { get; set; }
 
     public string? TaxType { get; set; }
+
+    public string? TrackingCategoryName { get; set; }
+
+    public string? TrackingCategoryOption { get; set; }
 }
