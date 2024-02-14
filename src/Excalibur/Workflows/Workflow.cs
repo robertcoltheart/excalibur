@@ -29,7 +29,7 @@ public abstract class Workflow<T, TRestful>
 
         if (!items.Any())
         {
-            Console.WriteLine("No Excel files found in current folder");
+            Console.WriteLine("No valid Excel files found in current folder");
 
             return;
         }

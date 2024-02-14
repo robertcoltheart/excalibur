@@ -9,9 +9,9 @@ Download the application from the releases page and put the exe into a folder. C
 
 Excel files must being with a header with the following columns, with sample data shown.
 
-| PurchaseOrderNumber | Contact | Date | DeliveryDate | Reference | Status | Line Items.AccountCode | Line Items.Description | Line Items.Quantity | Line Items.UnitAmount | Line Items.TaxType |
-| -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
-| Used for grouping | Full name | yyyy-MM-dd | yyyy-MM-dd | Any | DRAFT | 300 | Description | 5.0 | 1.0 | INPUT |
+| PurchaseOrderNumber | Contact | Date | DeliveryDate | Reference | Status | Line Items.AccountCode | Line Items.Description | Line Items.Quantity | Line Items.UnitAmount | Line Items.TaxType | Tracking.[Tracking category] |
+| -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+| Used for grouping | Full name | yyyy-MM-dd | yyyy-MM-dd | Any | DRAFT | 300 | Description | 5.0 | 1.0 | INPUT | Category option |
 
 Multiple purchase orders can be created by entering unique values for:
 - PurchaseOrderNumber
