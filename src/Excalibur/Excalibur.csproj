@@ -16,7 +16,7 @@
     <PackageReference Include="ConsoleTools" Version="1.1.1" />
     <PackageReference Include="NPOI" Version="2.7.0" />
     <PackageReference Include="Pastel" Version="5.1.0" />
-    <PackageReference Include="Refit" Version="7.1.0" />
+    <PackageReference Include="Refit" Version="7.1.1" />
   </ItemGroup>
 
 </Project>
