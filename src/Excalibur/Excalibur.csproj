@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConsoleTools" Version="1.2.0" />
+    <PackageReference Include="ConsoleTools" Version="1.2.1" />
     <PackageReference Include="NPOI" Version="2.7.1" />
     <PackageReference Include="Pastel" Version="5.1.0" />
     <PackageReference Include="Refit" Version="7.1.2" />
